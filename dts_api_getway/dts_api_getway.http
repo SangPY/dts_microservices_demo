@@ -1,0 +1,6 @@
+@dts_api_getway_HostAddress = http://localhost:5200
+
+GET {{dts_api_getway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

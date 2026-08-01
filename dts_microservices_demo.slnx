@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="dts_api_getway/dts_api_getway.csproj" />
+  <Project Path="dts_catelogy_service/dts_catelogy_service.csproj" />
+  <Project Path="dts_orders_service/dts_orders_service.csproj" />
+</Solution>
