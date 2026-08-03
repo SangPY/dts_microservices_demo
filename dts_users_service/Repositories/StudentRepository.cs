@@ -110,7 +110,12 @@ namespace dts_users_service.Repositories
             await _context.SaveChangesAsync();
 
             return true;
-        
-    }
+
+        }
+
+        public async Task<bool> ExistsByEmailAsync(string email)
+        {
+            return await _context.Students.AnyAsync(x => x.Email == email);
+        }
     }
 }
