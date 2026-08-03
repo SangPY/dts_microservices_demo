@@ -42,9 +42,9 @@ namespace dts_users_service.Controllers
         [HttpPost("CreateStudent")]
         public async Task<ActionResult<StudentDto>> Create(CreateStudentDto dto)
         {
-            var student = await _studentService.CreateStudentAsync(dto);
+            var result = await _studentService.CreateStudentAsync(dto);
 
-            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
+            return Ok(result);
         }
 
         [HttpPut("UpdateStudent")]

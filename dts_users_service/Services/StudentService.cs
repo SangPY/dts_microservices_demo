@@ -2,6 +2,7 @@
 using dts_users_service.Dto;
 using dts_users_service.Models;
 using dts_users_service.Repositories;
+using FluentValidation;
 
 namespace dts_users_service.Services
 {
@@ -9,11 +10,14 @@ namespace dts_users_service.Services
     {
         private readonly IMapper _mapper;
         private readonly IStudentRepository _repository;
+        private readonly IValidator<CreateStudentDto> _validator;
 
-        public StudentService(IMapper mapper, IStudentRepository repository)
+
+        public StudentService(IMapper mapper, IStudentRepository repository, IValidator<CreateStudentDto> validator)
         {
             _mapper = mapper;
             _repository = repository;
+            _validator = validator;
         }
 
         public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync()
@@ -35,10 +39,14 @@ namespace dts_users_service.Services
         public async Task<StudentDto> CreateStudentAsync(CreateStudentDto dto)
         {
             // Business Logic sẽ viết ở đây
-            var existed = await _repository.ExistsByEmailAsync(dto.Email);
+            //var existed = await _repository.ExistsByEmailAsync(dto.Email);
 
-            if (existed)
-                throw new Exception("Email already exists.");
+            //if (existed)
+            //    throw new Exception("Email already exists.");
+            var validation = await _validator.ValidateAsync(dto);
+
+            if (!validation.IsValid)
+                throw new ValidationException(validation.Errors);
 
             var student = _mapper.Map<Students>(dto);
 
