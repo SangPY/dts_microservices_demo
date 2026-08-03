@@ -1,10 +1,11 @@
+using dts_users_service.Extensions;
 using dts_users_service.Mapping;
 using dts_users_service.Models;
 using dts_users_service.Repositories;
 using dts_users_service.Services;
 using dts_users_service.Validators;
-using Microsoft.EntityFrameworkCore;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateStudentValidator>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseGlobalException();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

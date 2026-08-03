@@ -1,4 +1,5 @@
-﻿using dts_users_service.Dto;
+﻿using dts_users_service.Common;
+using dts_users_service.Dto;
 using dts_users_service.Models;
 using dts_users_service.Repositories;
 using dts_users_service.Services;
@@ -23,7 +24,17 @@ namespace dts_users_service.Controllers
         {
             var students = await _studentService.GetAllStudentsAsync();
 
-            return Ok(students);
+            //return Ok(students);
+            return Ok(new ApiResponse<IEnumerable<StudentDto>>
+            {
+                Success = true,
+
+                Message = "Success",
+
+                Data = students,
+
+                TraceId = HttpContext.TraceIdentifier
+            });
         }
 
 
@@ -55,7 +66,17 @@ namespace dts_users_service.Controllers
             if (student == null)
                 return NotFound();
 
-            return Ok(student);
+            //return Ok(student);
+            return Ok(new ApiResponse<StudentDto>
+            {
+                Success = true,
+
+                Message = "Student created successfully.",
+
+                Data = student,
+
+                TraceId = HttpContext.TraceIdentifier
+            });
         }
 
         [HttpDelete("{id}")]
@@ -66,7 +87,17 @@ namespace dts_users_service.Controllers
             if (!result)
                 return NotFound();
 
-            return Ok("Deleted Successfully");
+            //return Ok("Deleted Successfully");
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+
+                Message = "Deleted Successfully",
+
+                Data = null,
+
+                TraceId = HttpContext.TraceIdentifier
+            });
         }
     }
 }

@@ -60,7 +60,7 @@ namespace dts_users_service.Services
             var student = await _repository.GetStudentByIdAsync(dto.Id);
 
             if (student == null)
-                return null;
+                throw new KeyNotFoundException("Student not found.");
 
             _mapper.Map(dto, student);
 
