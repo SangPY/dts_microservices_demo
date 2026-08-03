@@ -5,15 +5,15 @@ namespace dts_users_service.Repositories
 {
     public interface IStudentRepository
     {
-        Task<IEnumerable<StudentDto>> GetAllStudentsAsync();
+        Task<IEnumerable<Students>> GetAllStudentsAsync();
 
-        Task<StudentDto?> GetStudentByIdAsync(int id);
+        Task<Students?> GetStudentByIdAsync(int id);
 
-        Task<StudentDto> AddStudentAsync(CreateStudentDto dto);
+        Task<Students> AddStudentAsync(Students students);
 
-        Task<StudentDto> UpdateStudentAsync(UpdateStudentDto dto);
+        Task<Students> UpdateStudentAsync(Students students);
 
-        Task<bool> DeleteStudentAsync(int id);
+        Task<bool> DeleteStudentAsync(Students students);
 
         Task<bool> ExistsByEmailAsync(string email);
     }

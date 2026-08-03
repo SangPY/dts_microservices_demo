@@ -14,103 +14,47 @@ namespace dts_users_service.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync()
+        public async Task<IEnumerable<Students>> GetAllStudentsAsync()
         {
-            return await _context.Students
-                .Select(x => new StudentDto
-                {
-                    Id = x.Id,
-                    StudentName = x.StudentName,
-                    Age = x.Age,
-                    Email = x.Email,
-                    Class = x.Class
-                })
-                .ToListAsync();
+            return await _context.Students.ToListAsync();
         }
 
-        public async Task<StudentDto?> GetStudentByIdAsync(int id)
+        public async Task<Students?> GetStudentByIdAsync(int id)
         {
-            return await _context.Students
-                .Where(x => x.Id == id)
-                .Select(x => new StudentDto
-                {
-                    Id = x.Id,
-                    StudentName = x.StudentName,
-                    Age = x.Age,
-                    Email = x.Email,
-                    Class = x.Class
-                })
-                .FirstOrDefaultAsync();
+            return await _context.Students.FindAsync(id);
         }
 
-        public async Task<StudentDto> AddStudentAsync(CreateStudentDto dto)
+        public async Task<Students> AddStudentAsync(Students students)
         {
-            var student = new Students
-            {
-                StudentName = dto.StudentName,
-                Age = dto.Age,
-                DOB = dto.DOB,
-                Email = dto.Email,
-                FatherName = dto.FatherName,
-                MotherName = dto.MotherName,
-                Class = dto.Class,
-                City = dto.City
-            };
-
-            await _context.Students.AddAsync(student);
+            await _context.Students.AddAsync(students);
             await _context.SaveChangesAsync();
-
-            return new StudentDto
-            {
-                Id = student.Id,
-                StudentName = student.StudentName,
-                Age = student.Age,
-                Email = student.Email,
-                Class = student.Class
-            };
+            return students;
         }
 
-        public async Task<StudentDto?> UpdateStudentAsync(UpdateStudentDto dto)
+        public async Task<Students?> UpdateStudentAsync(Students students)
         {
-            var student = await _context.Students.FindAsync(dto.Id);
+            var existingStudent = await _context.Students.FindAsync(students.Id);
 
-            if (student == null)
+            if (existingStudent == null)
                 return null;
 
-            student.StudentName = dto.StudentName;
-            student.Age = dto.Age;
-            student.DOB = dto.DOB;
-            student.Email = dto.Email;
-            student.FatherName = dto.FatherName;
-            student.MotherName = dto.MotherName;
-            student.Class = dto.Class;
-            student.City = dto.City;
-
+            _context.Entry(existingStudent).CurrentValues.SetValues(students);
             await _context.SaveChangesAsync();
 
-            return new StudentDto
-            {
-                Id = student.Id,
-                StudentName = student.StudentName,
-                Age = student.Age,
-                Email = student.Email,
-                Class = student.Class
-            };
+            return existingStudent;
         }
 
-        public async Task<bool> DeleteStudentAsync(int id)
+        public async Task<bool> DeleteStudentAsync(Students students)
         {
-            var student = await _context.Students.FindAsync(id);
+            var existingStudent = await _context.Students.FindAsync(students.Id);
 
-            if (student == null)
+            if (existingStudent == null)
                 return false;
 
-            _context.Students.Remove(student);
-
+            _context.Students.Remove(existingStudent);
             await _context.SaveChangesAsync();
 
             return true;
-
         }
 
         public async Task<bool> ExistsByEmailAsync(string email)
@@ -119,3 +63,4 @@ namespace dts_users_service.Repositories
         }
     }
 }
+
