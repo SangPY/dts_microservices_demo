@@ -1,17 +1,18 @@
-﻿using dts_users_service.Models;
+﻿using dts_users_service.Dto;
+using dts_users_service.Models;
 
 namespace dts_users_service.Repositories
 {
     public interface IStudentRepository
     {
-        List<Students> GetAllStudents();
+        Task<IEnumerable<StudentDto>> GetAllStudentsAsync();
 
-        Students? GetStudentById(int id);
+        Task<StudentDto?> GetStudentByIdAsync(int id);
 
-        Students AddStudent(Students student);
+        Task<StudentDto> AddStudentAsync(CreateStudentDto dto);
 
-        Students UpdateStudent(Students student);
+        Task<StudentDto> UpdateStudentAsync(UpdateStudentDto dto);
 
-        bool DeleteStudent(int id);
+        Task<bool> DeleteStudentAsync(int id);
     }
 }

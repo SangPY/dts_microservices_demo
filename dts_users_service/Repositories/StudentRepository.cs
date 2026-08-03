@@ -1,4 +1,7 @@
-﻿using dts_users_service.Models;
+﻿using dts_users_service.Dto;
+using dts_users_service.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace dts_users_service.Repositories
 {
@@ -11,43 +14,103 @@ namespace dts_users_service.Repositories
             _context = context;
         }
 
-        public List<Students> GetAllStudents()
+        public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync()
         {
-            return _context.Students.ToList();
+            return await _context.Students
+                .Select(x => new StudentDto
+                {
+                    Id = x.Id,
+                    StudentName = x.StudentName,
+                    Age = x.Age,
+                    Email = x.Email,
+                    Class = x.Class
+                })
+                .ToListAsync();
         }
 
-        public Students? GetStudentById(int id)
+        public async Task<StudentDto?> GetStudentByIdAsync(int id)
         {
-            return _context.Students.FirstOrDefault(x => x.Id == id);
+            return await _context.Students
+                .Where(x => x.Id == id)
+                .Select(x => new StudentDto
+                {
+                    Id = x.Id,
+                    StudentName = x.StudentName,
+                    Age = x.Age,
+                    Email = x.Email,
+                    Class = x.Class
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public Students AddStudent(Students student)
+        public async Task<StudentDto> AddStudentAsync(CreateStudentDto dto)
         {
-            _context.Students.Add(student);
-            _context.SaveChanges();
+            var student = new Students
+            {
+                StudentName = dto.StudentName,
+                Age = dto.Age,
+                DOB = dto.DOB,
+                Email = dto.Email,
+                FatherName = dto.FatherName,
+                MotherName = dto.MotherName,
+                Class = dto.Class,
+                City = dto.City
+            };
 
-            return student;
+            await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+
+            return new StudentDto
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Age = student.Age,
+                Email = student.Email,
+                Class = student.Class
+            };
         }
 
-        public Students UpdateStudent(Students student)
+        public async Task<StudentDto?> UpdateStudentAsync(UpdateStudentDto dto)
         {
-            _context.Students.Update(student);
-            _context.SaveChanges();
+            var student = await _context.Students.FindAsync(dto.Id);
 
-            return student;
+            if (student == null)
+                return null;
+
+            student.StudentName = dto.StudentName;
+            student.Age = dto.Age;
+            student.DOB = dto.DOB;
+            student.Email = dto.Email;
+            student.FatherName = dto.FatherName;
+            student.MotherName = dto.MotherName;
+            student.Class = dto.Class;
+            student.City = dto.City;
+
+            await _context.SaveChangesAsync();
+
+            return new StudentDto
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Age = student.Age,
+                Email = student.Email,
+                Class = student.Class
+            };
         }
 
-        public bool DeleteStudent(int id)
+        public async Task<bool> DeleteStudentAsync(int id)
         {
-            var student = _context.Students.Find(id);
+            var student = await _context.Students.FindAsync(id);
 
             if (student == null)
                 return false;
 
             _context.Students.Remove(student);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
 
             return true;
-        }
+        
+    }
     }
 }
