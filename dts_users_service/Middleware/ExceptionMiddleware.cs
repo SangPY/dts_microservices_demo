@@ -1,4 +1,5 @@
 ﻿using dts_users_service.Common;
+using Serilog;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
@@ -21,6 +22,8 @@ namespace dts_users_service.Middleware
             }
             catch (ValidationException ex)
             {
+                Log.Warning(ex, "Validation Failed");
+
                 await HandleValidationException(context, ex);
             }
             catch (KeyNotFoundException ex)
@@ -29,6 +32,8 @@ namespace dts_users_service.Middleware
             }
             catch (Exception ex)
             {
+                Log.Error(ex, ex.Message);
+
                 await HandleException(context, ex);
             }
         }
