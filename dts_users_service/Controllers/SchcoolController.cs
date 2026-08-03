@@ -1,6 +1,7 @@
 ﻿using dts_users_service.Dto;
 using dts_users_service.Models;
 using dts_users_service.Repositories;
+using dts_users_service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -10,17 +11,17 @@ namespace dts_users_service.Controllers
     [ApiController]
     public class SchoolController : ControllerBase
     {
-        private readonly IStudentRepository _studentRepository;
+        private readonly IStudentService _studentService;
 
-        public SchoolController(IStudentRepository studentRepository)
+        public SchoolController(IStudentService studentService)
         {
-            _studentRepository = studentRepository;
+            _studentService = studentService;
         }
 
         [HttpGet("GetAllStudents")]
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetAllStudents()
         {
-            var students = await _studentRepository.GetAllStudentsAsync();
+            var students = await _studentService.GetAllStudentsAsync();
 
             return Ok(students);
         }
@@ -29,7 +30,7 @@ namespace dts_users_service.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<StudentDto?>> GetStudentById(int id)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(id);
+            var student = await _studentService.GetStudentByIdAsync(id);
 
             if (student == null)
                 return NotFound();
@@ -41,7 +42,7 @@ namespace dts_users_service.Controllers
         [HttpPost("CreateStudent")]
         public async Task<ActionResult<StudentDto>> Create(CreateStudentDto dto)
         {
-            var student = await _studentRepository.AddStudentAsync(dto);
+            var student = await _studentService.CreateStudentAsync(dto);
 
             return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
         }
@@ -49,7 +50,7 @@ namespace dts_users_service.Controllers
         [HttpPut("UpdateStudent")]
         public async Task<ActionResult<StudentDto?>> Update(UpdateStudentDto dto)
         {
-            var student = await _studentRepository.UpdateStudentAsync(dto);
+            var student = await _studentService.UpdateStudentAsync(dto);
 
             if (student == null)
                 return NotFound();
@@ -60,7 +61,7 @@ namespace dts_users_service.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> DeleteStudent(int id)
         {
-            var result = await _studentRepository.DeleteStudentAsync(id);
+            var result = await _studentService.DeleteStudentAsync(id);
 
             if (!result)
                 return NotFound();

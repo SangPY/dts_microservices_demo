@@ -14,5 +14,7 @@ namespace dts_users_service.Repositories
         Task<StudentDto> UpdateStudentAsync(UpdateStudentDto dto);
 
         Task<bool> DeleteStudentAsync(int id);
+
+        Task<bool> ExistsByEmailAsync(string email);
     }
 }
