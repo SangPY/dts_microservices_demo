@@ -11,13 +11,15 @@ namespace dts_users_service.Services
         private readonly IMapper _mapper;
         private readonly IStudentRepository _repository;
         private readonly IValidator<CreateStudentDto> _validator;
+        private readonly ILogger<StudentService> _logger;
 
 
-        public StudentService(IMapper mapper, IStudentRepository repository, IValidator<CreateStudentDto> validator)
+        public StudentService(IMapper mapper, IStudentRepository repository, IValidator<CreateStudentDto> validator, ILogger<StudentService> logger)
         {
             _mapper = mapper;
             _repository = repository;
             _validator = validator;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync()
@@ -43,6 +45,10 @@ namespace dts_users_service.Services
 
             //if (existed)
             //    throw new Exception("Email already exists.");
+            _logger.LogInformation(
+                "Creating student {StudentName}",
+                dto.StudentName);
+
             var validation = await _validator.ValidateAsync(dto);
 
             if (!validation.IsValid)
@@ -52,11 +58,19 @@ namespace dts_users_service.Services
 
             student = await _repository.AddStudentAsync(student);
 
+            _logger.LogInformation(
+                "Student {StudentId} created successfully",
+                student.Id);
+
             return _mapper.Map<StudentDto>(student);
         }
 
         public async Task<StudentDto?> UpdateStudentAsync(UpdateStudentDto dto)
         {
+            _logger.LogInformation(
+                "Updating student {StudentId}",
+                dto.Id);
+
             var student = await _repository.GetStudentByIdAsync(dto.Id);
 
             if (student == null)
@@ -65,6 +79,10 @@ namespace dts_users_service.Services
             _mapper.Map(dto, student);
 
             await _repository.UpdateStudentAsync(student);
+
+            _logger.LogInformation(
+                "Student {StudentId} updated successfully",
+                student.Id);
 
             return _mapper.Map<StudentDto>(student);
         }
@@ -77,6 +95,10 @@ namespace dts_users_service.Services
                 return false;
 
             await _repository.DeleteStudentAsync(student);
+
+            _logger.LogInformation(
+                "Deleting student {StudentId}",
+                id);
 
             return true;
         }
