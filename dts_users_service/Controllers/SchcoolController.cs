@@ -18,16 +18,18 @@ namespace dts_users_service.Controllers
         }
 
         [HttpGet("GetAllStudents")]
-        public IActionResult GetAllStudents()
+        public async Task<ActionResult<IEnumerable<StudentDto>>> GetAllStudents()
         {
-            var students = _studentRepository.GetAllStudents();
+            var students = await _studentRepository.GetAllStudentsAsync();
+
             return Ok(students);
         }
 
+
         [HttpGet("{id}")]
-        public IActionResult GetStudentById(int id)
+        public async Task<ActionResult<StudentDto?>> GetStudentById(int id)
         {
-            var student = _studentRepository.GetStudentById(id);
+            var student = await _studentRepository.GetStudentByIdAsync(id);
 
             if (student == null)
                 return NotFound();
@@ -35,68 +37,30 @@ namespace dts_users_service.Controllers
             return Ok(student);
         }
 
-        [HttpPost]
-        public IActionResult AddStudent(Students student)
-        {
-            var result = _studentRepository.AddStudent(student);
-
-            return Ok(result);
-        }
 
         [HttpPost("CreateStudent")]
-        public IActionResult Create(CreateStudentDto dto)
+        public async Task<ActionResult<StudentDto>> Create(CreateStudentDto dto)
         {
-            var student = new Students
-            {
-                StudentName = dto.StudentName,
-                Age = dto.Age,
-                DOB = dto.DOB,
-                Email = dto.Email,
-                FatherName = dto.FatherName,
-                MotherName = dto.MotherName,
-                Class = dto.Class,
-                City = dto.City
-            };
+            var student = await _studentRepository.AddStudentAsync(dto);
 
-            _studentRepository.AddStudent(student);
-
-            return Ok(student);
+            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
         }
 
         [HttpPut("UpdateStudent")]
-        public IActionResult Update(UpdateStudentDto dto)
+        public async Task<ActionResult<StudentDto?>> Update(UpdateStudentDto dto)
         {
-            var student = _studentRepository.GetStudentById(dto.Id);
+            var student = await _studentRepository.UpdateStudentAsync(dto);
 
             if (student == null)
                 return NotFound();
 
-            student.StudentName = dto.StudentName;
-            student.Age = dto.Age;
-            student.DOB = dto.DOB;
-            student.Email = dto.Email;
-            student.FatherName = dto.FatherName;
-            student.MotherName = dto.MotherName;
-            student.Class = dto.Class;
-            student.City = dto.City;
-
-            _studentRepository.UpdateStudent(student);
-
             return Ok(student);
         }
 
-        [HttpPut]
-        public IActionResult UpdateStudent(Students student)
-        {
-            var result = _studentRepository.UpdateStudent(student);
-
-            return Ok(result);
-        }
-
         [HttpDelete("{id}")]
-        public IActionResult DeleteStudent(int id)
+        public async Task<ActionResult<bool>> DeleteStudent(int id)
         {
-            var result = _studentRepository.DeleteStudent(id);
+            var result = await _studentRepository.DeleteStudentAsync(id);
 
             if (!result)
                 return NotFound();
