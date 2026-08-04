@@ -1,4 +1,7 @@
 <Solution>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
   <Project Path="dts_api_getway/dts_api_getway.csproj" />
   <Project Path="dts_catelogy_service/dts_catelogy_service.csproj" />
   <Project Path="dts_login_service/dts_login_service.csproj" Id="0350cdba-76b4-4019-a7af-5a203d9c6c2d" />

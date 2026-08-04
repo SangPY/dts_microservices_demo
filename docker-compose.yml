@@ -1,0 +1,31 @@
+services:
+
+  dts_users_service:
+    image: ${DOCKER_REGISTRY-}dtsusersservice
+
+    build:
+      context: .
+      dockerfile: dts_users_service/Dockerfile
+
+    depends_on:
+      - seq
+
+  seq:
+    image: datalust/seq:latest
+
+    container_name: seq
+
+    restart: unless-stopped
+
+    environment:
+      ACCEPT_EULA: "Y"
+
+    ports:
+      - "5341:80"
+
+    volumes:
+      - seq-data:/data
+
+volumes:
+
+  seq-data:
