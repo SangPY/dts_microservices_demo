@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="../dts_rabbitmq/dts_rabbitmq.csproj" Id="15b4fb1e-8180-4003-bd90-450fe6167167" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
@@ -7,5 +6,6 @@
   <Project Path="dts_catelogy_service/dts_catelogy_service.csproj" />
   <Project Path="dts_login_service/dts_login_service.csproj" Id="0350cdba-76b4-4019-a7af-5a203d9c6c2d" />
   <Project Path="dts_orders_service/dts_orders_service.csproj" />
+  <Project Path="dts_rabbitmq/dts_rabbitmq.csproj" />
   <Project Path="dts_users_service/dts_users_service.csproj" Id="bff2b769-6f22-458b-b9c9-418056e499ad" />
 </Solution>
