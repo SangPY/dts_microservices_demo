@@ -3,6 +3,7 @@
     <Build />
   </Project>
   <Project Path="dts_api_getway/dts_api_getway.csproj" />
+  <Project Path="dts_api_getway_yarp/dts_api_getway_yarp.csproj" Id="18977a05-3af1-4dcc-aa59-54d1128a0f8d" />
   <Project Path="dts_catelogy_service/dts_catelogy_service.csproj" />
   <Project Path="dts_login_service/dts_login_service.csproj" Id="0350cdba-76b4-4019-a7af-5a203d9c6c2d" />
   <Project Path="dts_orders_service/dts_orders_service.csproj" />
